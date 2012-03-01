@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-int recevoirPaquet(int sock_C, paquet* p, struct sockaddr* sa_S ,unsigned int taille_sa_S);
+int recevoirPaquet(int sock_C, paquet* p, struct sockaddr* sa_S ,unsigned int* taille_sa_S);
 
 int envoyerPaquet(int sock_C, paquet* p, struct sockaddr* sa_S ,unsigned int taille_sa_S);
 

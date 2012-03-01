@@ -4,7 +4,7 @@
 # Travaux Pratiques réseau Info3
 #
 
-CFLAGS = -Wall -std=c99
+CFLAGS = -Wall -std=c99 -g
 
 CC	 = gcc
 EXEC = tp

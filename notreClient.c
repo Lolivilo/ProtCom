@@ -7,31 +7,35 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define UDP_port_S 8000
 
 
-int recevoirPaquet(int sock_C, paquet* p, struct sockaddr* sa_S ,unsigned int taille_sa_S)
+int recevoirPaquet(int sock_Rec, paquet* p, struct sockaddr* sa_Rec ,unsigned int *taille_sa)
 {
-	char buffer[LONGUEUR_ADRESSE + LONGUEUR_MESSAGE];
+	char buffer[2*LONGUEUR_ADRESSE + sizeof(int) + LONGUEUR_MESSAGE + 3*sizeof(char)];
+	int sizebuff = 2*LONGUEUR_ADRESSE + sizeof(int) + LONGUEUR_MESSAGE + 3*sizeof(char);
+	memset (buffer, '\0', sizebuff*sizeof(char));
 
-	memset (buffer, '\0', (LONGUEUR_ADRESSE + LONGUEUR_MESSAGE) * sizeof(char));
-	if ((recvfrom(sock_C, buffer, strlen(buffer), 0, (struct sockaddr *) &sa_S, &taille_sa_S)) == -1)
+	if ((recvfrom(sock_Rec, buffer, sizebuff*sizeof(char), 0, (struct sockaddr *) sa_Rec, taille_sa)) == -1)
 	{
+		perror("Receive");
 		printf("Erreur lors de la lecture ! \n");
 		return 0;
 	}
-	sscanf(buffer, "%s|%s|%i|%s", (char*)&p->ipDest, (char*)&p->ipSrc, &p->flag, (char*)&p->data);
+	sscanf(buffer, "%s|%s|%d|%s", (char*)&p->ipDest, (char*)&p->ipSrc, &p->flag, (char*)&p->data);
 
 	return 1;
 }
 
-int envoyerPaquet(int sock_C, paquet* p, struct sockaddr* sa_S ,unsigned int taille_sa_S)
+int envoyerPaquet(int sock_Env, paquet* p, struct sockaddr* sa_Env ,unsigned int taille_sa)
 {
 	char buffer[2*LONGUEUR_ADRESSE + sizeof(int) + LONGUEUR_MESSAGE + 3*sizeof(char)];
+	int sizebuff = 2*LONGUEUR_ADRESSE + sizeof(int) + LONGUEUR_MESSAGE + 3*sizeof(char);
+	sprintf(buffer, "%s|%s|%d|%s", p->ipDest, p->ipSrc, p->flag, p->data);
 
-	sprintf(buffer, "%s|%s|%c|%s", p->ipDest, p->ipSrc, p->flag, p->data);
-	if ((sendto(sock_C, buffer, strlen(buffer), 0, (struct sockaddr*) &sa_S, taille_sa_S)) != strlen(buffer))
+	if ((sendto(sock_Env, buffer, sizebuff*sizeof(char), 0, (struct sockaddr*) sa_Env, taille_sa)) != strlen(buffer))
 	{
 		printf("Erreur lors de l'écriture ! \n");
 		return 0;
