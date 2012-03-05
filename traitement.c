@@ -27,8 +27,11 @@ int traiterPaquet(paquet *paq, int enviParler, char myip[LONGUEUR_ADRESSE])
         }
         else
         {
+        		printf("get data ->\n");
             GetData(paq); // Récupération des données
-            RemplirPaquet(paq->ipSrc,myip, NULL, 1, paq); // Envoi de l'accusé de reception
+            printf("remplir ->\n");
+            RemplirPaquet(paq->ipSrc,myip, "", 1, paq); // Envoi de l'accusé de reception
+            printf("fin else ->\n");
             return 0;
         }
     }

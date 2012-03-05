@@ -7,10 +7,10 @@
 #include <string.h>
 
 
-#define PORT_LOC 8001
-#define PORT_SUIV 8000
-#define ADRESSE_SUIVANT "172.19.65.147"
-#define ADRESSE_HOTE "172.19.65.146"
+#define PORT_LOC 8000
+#define PORT_SUIV 8001
+#define ADRESSE_SUIVANT "172.19.65.109"
+#define ADRESSE_HOTE "172.19.65.101"
 
 int main(int argc, const char* argv[])
 {
