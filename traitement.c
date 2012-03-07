@@ -25,6 +25,7 @@ int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
         if(paq->flag == 1)
         {
             effacerPaquet(paq);
+            printf("ACCUSE DE RECEPTION RECU\n");
         }
         else
         {
