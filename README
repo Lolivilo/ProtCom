@@ -1,0 +1,4 @@
+make
+./tp ipLocale:PortEcouteLocalLocal ipSuivant:PortEcouteSuivant [INIT]
+
+INIT -> Pour envoyer le premier message.
