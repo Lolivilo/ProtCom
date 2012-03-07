@@ -19,5 +19,19 @@ typedef struct paquet
     char data[LONGUEUR_MESSAGE];
 } paquet;
 
+typedef struct hote
+{
+    char ip[LONGUEUR_ADRESSE];
+    int port;
+} hote;
+
+typedef struct parler
+{
+    int envie;
+    char ipDest[LONGUEUR_ADRESSE];
+    char data[LONGUEUR_MESSAGE];
+    
+} parler;
+
 
 #endif

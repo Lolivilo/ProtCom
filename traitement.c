@@ -11,11 +11,12 @@
 #include "paquet.h"
 #include "traitement.h"
 #include "ihm.h"
+#include <stdlib.h>
 
 
-int traiterPaquet(paquet *paq, int enviParler, char myip[LONGUEUR_ADRESSE])
+int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
 {
-    if( (strcmp(paq->ipDest,myip) != 0) && (paq->flag == 1))
+    if( (strcmp(paq->ipDest,myip) != 0)/* && (paq->flag == 1)*/) // Paquet n'est pas pour nous
     {
         return 0;
     }
@@ -27,22 +28,16 @@ int traiterPaquet(paquet *paq, int enviParler, char myip[LONGUEUR_ADRESSE])
         }
         else
         {
-        		printf("get data ->\n");
             GetData(paq); // Récupération des données
-            printf("remplir ->\n");
             RemplirPaquet(paq->ipSrc,myip, "", 1, paq); // Envoi de l'accusé de reception
-            printf("fin else ->\n");
             return 0;
         }
     }
-    if(enviParler)
+    if(parle->envie == 1)
     {
         effacerPaquet(paq);
-        char ipDest[LONGUEUR_ADRESSE];
-        char data[LONGUEUR_MESSAGE];
-        
-        DemanderDataPaquet(ipDest, data);
-        RemplirPaquet(ipDest, myip, data, 0, paq);
+        RemplirPaquet(parle->ipDest, myip, parle->data, 0, paq);
+        parle->envie = 0;
         
     }
     return 0;
@@ -62,14 +57,26 @@ void effacerPaquet(paquet *paq)
 
 void GetData(paquet *paq)
 {
-    printf("DATA : %s", paq->data);
+    printf("PAQUET RECU NOUS ETANT DESTINE; IP DE LA DESTINATION:%s\tDONNEES:%s\n", paq-> ipSrc,paq->data);
 }
 
 void RemplirPaquet(char dest[LONGUEUR_ADRESSE], char src[LONGUEUR_ADRESSE], char data[LONGUEUR_MESSAGE], int flag, paquet *paq)
 {
-    strcpy(paq->ipSrc, dest);
-    strcpy(paq->ipDest, src);
+    strcpy(paq->ipSrc, src);
+    strcpy(paq->ipDest, dest);
     strcpy(paq->data, data);
     paq->flag = flag;
     
+}
+
+void bufferToPaquet(char * buffer, paquet *p, const char *limiter )
+{
+    char *temp = malloc(strlen(buffer)*sizeof(char));
+    temp = strcpy(temp,buffer);
+    strcpy(p->ipDest,strtok(temp, limiter));
+    strcpy(p->ipSrc,strtok(NULL, limiter));
+    char flagChar[1];
+    strcpy(flagChar,strtok(NULL, limiter));
+    p->flag = atoi(flagChar);
+    strcpy(p->data,strtok(NULL, limiter));
 }

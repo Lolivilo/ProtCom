@@ -9,6 +9,8 @@
 #ifndef Tp1_reseau_ihm_h
 #define Tp1_reseau_ihm_h
 
-void DemanderDataPaquet(char ipDest[LONGUEUR_ADRESSE], char data[LONGUEUR_MESSAGE]);
+void DemanderDataPaquet(parler *parle);
+
+void ConvertArgToIpAndPort(char *arg, hote *hote);
 
 #endif
