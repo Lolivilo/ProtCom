@@ -13,11 +13,11 @@
 
 void DemanderDataPaquet(parler *parle)
 {
-    
+    parle->envie = 0;
     if (getchar() == 'e')
         parle->envie = 1;
     
-    if(parle->envie)
+    if(parle->envie == 1)
     {
         printf("Destinataire :\t");
         scanf("%s",parle->ipDest);

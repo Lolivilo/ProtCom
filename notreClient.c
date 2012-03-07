@@ -27,7 +27,6 @@ int recevoirPaquet(int sock_Rec, paquet* p, struct sockaddr* sa_Rec ,unsigned in
 		printf("Erreur lors de la lecture ! \n");
 		return 0;
 	}
-	//sscanf(buffer, "%s|%s|%d|%s", (char*)&(p->ipDest), (char*)&(p->ipSrc), &(p->flag), (char*)&(p->data));
     bufferToPaquet(buffer, p, "|" );
 
 	return 1;
