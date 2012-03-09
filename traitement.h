@@ -18,4 +18,6 @@ void GetData(paquet *paq);
 void RemplirPaquet(char dest[LONGUEUR_ADRESSE], char src[LONGUEUR_ADRESSE], char data[LONGUEUR_MESSAGE], int flag, paquet *paq);
 
 void bufferToPaquet(char * buffer, paquet *p, const char *limiter );
+
+int paqIsEmpty(paquet *p);
 #endif

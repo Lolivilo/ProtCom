@@ -22,7 +22,7 @@ void DemanderDataPaquet(parler *parle)
         printf("Destinataire :\t");
         scanf("%s",parle->ipDest);
         printf("\nData :\t");
-        scanf("%s",parle->data);
+        scanf("%s[^\ ]", parle->data);
         printf("\n");
     }
 }

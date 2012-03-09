@@ -16,11 +16,11 @@
 
 int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
 {
-    if( (strcmp(paq->ipDest,myip) != 0)/* && (paq->flag == 1)*/) // Paquet n'est pas pour nous
+    if( (strcmp(paq->ipDest,myip) != 0) && !paqIsEmpty(paq)) // Paquet n'est pas pour nous et qu'il est non vide
     {
         return 0;
     }
-    else
+    else if((strcmp(paq->ipDest,myip) == 0) && !paqIsEmpty(paq))// paquet pour nous et non vide
     {
         if(paq->flag == 1)
         {
@@ -30,11 +30,11 @@ int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
         else
         {
             GetData(paq); // Récupération des données
-            RemplirPaquet(paq->ipSrc,myip, "", 1, paq); // Envoi de l'accusé de reception
+            RemplirPaquet(paq->ipSrc,myip, "ACCUSE", 1, paq); // Envoi de l'accusé de reception
             return 0;
         }
     }
-    if(parle->envie == 1)
+    if(parle->envie == 1) // ici, le paquet est forcement vide, donc on peut parler si on en a envie
     {
         effacerPaquet(paq);
         RemplirPaquet(parle->ipDest, myip, parle->data, 0, paq);
@@ -51,9 +51,9 @@ void effacerPaquet(paquet *paq)
     for(int i=0;i<LONGUEUR_ADRESSE;i++)
         paq->ipSrc[i] = '0';
     for(int i=0;i<LONGUEUR_MESSAGE;i++)
-        paq->data[i] = ' ';
+        paq->data[i] = '0';
     
-    paq->flag = 0;  
+    paq->flag = 2;  
 }
 
 void GetData(paquet *paq)
@@ -81,3 +81,10 @@ void bufferToPaquet(char * buffer, paquet *p, const char *limiter )
     p->flag = atoi(flagChar);
     strcpy(p->data,strtok(NULL, limiter));
 }
+
+int paqIsEmpty(paquet *p)
+{
+	if(p->flag == 2)
+		return 1;
+	return 0;
+} 

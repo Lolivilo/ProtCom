@@ -85,11 +85,11 @@ int main(int argc, const char* argv[])
         printf("UN PAQUET A ETE RECU\n");
 
 		DemanderDataPaquet(&parle);
-        if(parle.envie == 1)
-        {
-            RemplirPaquet(parle.ipDest, local.ip, parle.data, 0, &p);
-            printf("NOUVEAU PAQUET CREE : IPD:%s IPS:%s DATA:%s FLAG:%d\n",p.ipDest,p.ipSrc,p.data,p.flag);
-        }
+       if(parle.envie == 1)
+       {
+           RemplirPaquet(parle.ipDest, local.ip, parle.data, 0, &p);
+           printf("NOUVEAU PAQUET CREE : IPD:%s IPS:%s DATA:%s FLAG:%d\n",p.ipDest,p.ipSrc,p.data,p.flag);
+       }
 
 		traiterPaquet(&p, &parle, local.ip);
 
