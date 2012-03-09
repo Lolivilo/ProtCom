@@ -28,7 +28,6 @@ int recevoirPaquet(int sock_Rec, paquet* p, struct sockaddr* sa_Rec ,unsigned in
 		return 0;
 	}
     bufferToPaquet(buffer, p, "|" );
-
 	return 1;
 }
 

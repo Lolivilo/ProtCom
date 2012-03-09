@@ -16,7 +16,7 @@ int main(int argc, const char* argv[])
     paquet p;
     if(argc < 3)
     {
-        printf("Il faut minimum 2 arguments :\texe ipLocale:Port ipSuivante:Port ");
+        printf("Il faut minimum 2 arguments .\prog ipLocale:Port ipSuivante:Port [INIT] ");
         exit(-1);
     }
     
@@ -82,23 +82,24 @@ int main(int argc, const char* argv[])
 			printf("Erreur lors de la reception \n");
 			exit(0);
 		}
-        printf("UN PAQUET A ETE RECU\n");
+        printf("_PAQUET RECU %s -> %s\t%d\t%s\n",p.ipSrc, p.ipDest, p.flag, p.data);
 
 		DemanderDataPaquet(&parle);
        if(parle.envie == 1)
        {
            RemplirPaquet(parle.ipDest, local.ip, parle.data, 0, &p);
-           printf("NOUVEAU PAQUET CREE : IPD:%s IPS:%s DATA:%s FLAG:%d\n",p.ipDest,p.ipSrc,p.data,p.flag);
+           printf("NOUVEAU PAQUET CREE %s -> %s\t%d\t%s\n",p.ipSrc, p.ipDest, p.flag, p.data);
        }
-
+        printf("MYIP_______%s\n",local.ip);
 		traiterPaquet(&p, &parle, local.ip);
+        //printf("SORTIE TRAITEMENT %s -> %s\t%d\t%s\n",p.ipSrc, p.ipDest, p.flag, p.data);
 
 		if (!(envoyerPaquet(sock_Suiv, &p, (struct sockaddr*) &sa_Suiv, taille_sa)))
 		{
 			printf("Erreur lors de l'envoi \n");
 			exit(0);
 		}
-        printf("UN PAQUET A ETE ENVOYE\n");
+         printf("_PAQUET ENVOYE %s -> %s\t%d\t%s\n",p.ipSrc, p.ipDest, p.flag, p.data);
 
 	}
 

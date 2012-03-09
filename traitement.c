@@ -16,25 +16,33 @@
 
 int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
 {
-    if( (strcmp(paq->ipDest,myip) != 0) && !paqIsEmpty(paq)) // Paquet n'est pas pour nous et qu'il est non vide
+    if( (strcmp(paq->ipDest,myip) != 0) && !paqIsEmpty(paq)) // Paquet n'est pas pour nous et qu'il est non vide (il est destiné à quelqu'un) donc on le fait suivre
     {
         return 0;
     }
-    else if((strcmp(paq->ipDest,myip) == 0) && !paqIsEmpty(paq))// paquet pour nous et non vide
+    else if((strcmp(paq->ipDest,myip) == 0))// paquet pour nous
     {
-        if(paq->flag == 1)
+        if(paq->flag == 1) // c'est un paquet accusé de reception
         {
-            effacerPaquet(paq);
             printf("ACCUSE DE RECEPTION RECU\n");
+            effacerPaquet(paq);
+           // printf("PAQUET VIDE CREE : 
+            
         }
-        else
+        else // c'est un paquet de données
         {
             GetData(paq); // Récupération des données
-            RemplirPaquet(paq->ipSrc,myip, "ACCUSE", 1, paq); // Envoi de l'accusé de reception
+            char SourcePaq[LONGUEUR_ADRESSE];
+            char DestPaq[LONGUEUR_ADRESSE];
+            strcpy(SourcePaq,paq->ipDest);
+            strcpy(DestPaq,paq->ipSrc);
+            effacerPaquet(paq);
+            RemplirPaquet(DestPaq,SourcePaq, "ACCUSE", 1, paq); // Envoi de l'accusé de reception
+            printf("PAQUET ACCUSE RECEPTION CREE : IP DESTINATION:%s\t;IP SRC:%s\tFLAG:%d\tDATA:%s\n",paq->ipDest, paq->ipSrc, paq->flag, paq->data);
             return 0;
         }
     }
-    if(parle->envie == 1) // ici, le paquet est forcement vide, donc on peut parler si on en a envie
+    if(parle->envie == 1) //ici le paquet est libre, donc on peut parler si on veut
     {
         effacerPaquet(paq);
         RemplirPaquet(parle->ipDest, myip, parle->data, 0, paq);
@@ -46,19 +54,16 @@ int traiterPaquet(paquet *paq, parler *parle, char myip[LONGUEUR_ADRESSE])
 
 void effacerPaquet(paquet *paq)
 {
-    for(int i=0;i<LONGUEUR_ADRESSE;i++)
-        paq->ipDest[i] = '0';
-    for(int i=0;i<LONGUEUR_ADRESSE;i++)
-        paq->ipSrc[i] = '0';
-    for(int i=0;i<LONGUEUR_MESSAGE;i++)
-        paq->data[i] = '0';
+    strcpy(paq->ipDest, "0");
+    strcpy(paq->ipSrc, "0");
+    strcpy(paq->data, "VIDE");
     
     paq->flag = 2;  
 }
 
 void GetData(paquet *paq)
 {
-    printf("PAQUET RECU NOUS ETANT DESTINE; IP DE LA DESTINATION:%s\tDONNEES:%s\n", paq-> ipSrc,paq->data);
+    printf("PAQUET RECU NOUS ETANT DESTINE; IP DE LA DESTINATION PAQUET:%s SRC:%s Flag:%d\tDONNEES:%s\n", paq->ipDest,paq->ipSrc, paq->flag,paq->data);
 }
 
 void RemplirPaquet(char dest[LONGUEUR_ADRESSE], char src[LONGUEUR_ADRESSE], char data[LONGUEUR_MESSAGE], int flag, paquet *paq)
@@ -72,6 +77,7 @@ void RemplirPaquet(char dest[LONGUEUR_ADRESSE], char src[LONGUEUR_ADRESSE], char
 
 void bufferToPaquet(char * buffer, paquet *p, const char *limiter )
 {
+    //printf("BUF\t%s\n",buffer);
     char *temp = malloc(strlen(buffer)*sizeof(char));
     temp = strcpy(temp,buffer);
     strcpy(p->ipDest,strtok(temp, limiter));
@@ -80,6 +86,7 @@ void bufferToPaquet(char * buffer, paquet *p, const char *limiter )
     strcpy(flagChar,strtok(NULL, limiter));
     p->flag = atoi(flagChar);
     strcpy(p->data,strtok(NULL, limiter));
+    //printf("FIN BUF\n");
 }
 
 int paqIsEmpty(paquet *p)
